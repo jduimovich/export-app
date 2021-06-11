@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: export-app-deploy
+  labels:
+    app: export-app 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: export-app
+  template:
+    metadata:
+      labels:
+        app: export-app
+    spec: 
+      containers:
+        - name: export-app-deploy
+          image: jduimovich/export-app    
+          env:
+            - name: MY_GITHUB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: github-basic-auth
+                  key: username
+            - name: MY_GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-basic-auth
+                  key: password
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+            requests:
+              cpu: "300m"
+              memory: "512Mi"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080 

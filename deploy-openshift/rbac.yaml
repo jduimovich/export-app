@@ -1,0 +1,42 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: k8s-101-role
+subjects:
+- kind: ServiceAccount
+  name: k8s-101-role
+  namespace: n1
+roleRef:
+  kind: Role
+  name: k8s-101-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: k8s-101-role 
+  namespace: n1
+  labels:
+    k8s-app: export-app
+rules: 
+# Minimal privs for script  
+- apiGroups: [""]
+  resources:
+  - pods
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+  - get
+  - watch
+  - list
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-101-role
+  namespace: n1
+  labels:
+    k8s-app: export-app
+---

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Red Hat Namespace Export</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+
+<style>
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Lato", sans-serif
+  }
+
+  .w3-bar,
+  h1,
+  button {
+    font-family: "Montserrat", sans-serif
+  }
+
+  .fa-anchor,
+  .fa-coffee {
+    font-size: 200px
+  }
+</style>
+
+<body>
+
+  <!-- Header -->
+  <header class="w3-container w3-red w3-center" style="padding:64px 16px">
+    <i class="fab fa-redhat fa-5x "></i>
+    <h1 class="w3-margin w3-jumbo">Red Hat Namespace Gitops Exporter</h1>
+    <p class="w3-xlarge">Save your work, and join the gitops revolution!</p>
+    <p class="w3-xlarge">
+      This utility will export your application into a Kam Compatible gitops repository format.
+    
+    </p> 
+
+    <h1 id="summary"> Export to Gitops Format</h1>  
+    <button onclick="generateExport()" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+      Export the namespace
+    </button>
+    
+  <p> App was built at  
+    <div id="build-date"> </div>
+  </p>
+
+  </header> 
+
+  <h4>Manifest Directory</h4>
+  <div id="tree-view" style="height:300;width:800px;border:2px solid #ccc;"></div>
+  
+  <h1 id="submitpr"> Submit PR</h1>  
+  <button onclick="submitPR()" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+    Submit a Pull Request
+  </button> 
+
+  <h4>Output</h4>
+  <div id="stdout-view" style="height:300;width:800px;border:2px solid #ccc;"></div>
+  
+  <a href="export.tar" target="_blank">
+    <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+      Download Export Directory Tar
+    </button>
+  </a> 
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-64 w3-center w3-opacity">
+    <p>Powered by <a href="https://github.com/cooktheryan/gitops-primer" target="_blank">Ryan Cooks Gitops Primer</a></p>
+  </footer>
+
+  <script > 
+    function getTextAndUpdate(url, success, error) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              success(this.responseText);
+            } else {
+              error();
+            }
+          }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhttp.setRequestHeader('Accept', 'text/plain');
+        xhttp.send();
+      }
+
+      function submitPR() { 
+        getTextAndUpdate('submitpr', updateStatus, function () {
+          alert("error happened fetching status")
+        });  
+        setTimeout (loopUpdateStatus, 1000);
+      }
+
+      function generateExport() { 
+        getTextAndUpdate('trigger', updateTreeView, function () {
+          alert("error happened fetching trigger")
+        });  
+        setTimeout (loopUpdateStatus, 1000);  
+      }
+
+      var c = 0;
+      function loopUpdateStatus() {
+        console.log ("running loopUpdateStatus")
+        getTextAndUpdate(
+            'status',  
+            function (result) {
+              console.log ("loopUpdateStatus response")
+              console.log (result)
+              var r = JSON.parse(result);  
+              console.log(JSON.stringify (r, undefined, 4)) 
+              console.log ("---------------------")
+              if (r.inprogress) {   
+                updateStatus(JSON.stringify (r, undefined, 4))  
+                updateTreeView(r.tree) 
+                setTimeout (loopUpdateStatus, 1000); 
+                console.log ("setTimeout   loopUpdateStatus")
+              } else {   
+                console.log(JSON.stringify (r, undefined, 4)) 
+                updateStatus(r.stdout)
+                updateTreeView(r.tree) 
+              } 
+          },
+          function (result) { console.log ("error")}
+        );     
+      }    
+      
+      function updateStatus(text) {  
+        setInnerHtml("stdout-view", '<pre>' + text + '</pre>' );
+      }
+
+      function updateTreeView(text) {  
+        setInnerHtml("tree-view", '<pre>' + text + '</pre>' );
+      } 
+
+      function updateBuild(text) {
+        setInnerHtml("build-date", '<pre>' + text + '</pre>');
+      }
+      function setInnerHtml(id, html) {
+        document.getElementById(id).innerHTML = html;
+      }  
+      getTextAndUpdate('build-date', updateBuild, function () {
+          alert("error happened fetching buid-date")
+      }); 
+      loopUpdateStatus()
+  </script>
+
+</body>
+
+</html>
