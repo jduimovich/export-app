@@ -23,7 +23,7 @@ for o in $RESOURCES; do
       echo Processing $o
       bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o    
 done  
-bash $SCRIPT_DIR/scrub-secrets.sh $OUTPUT_DIR/secrets
+bash $SCRIPT_DIR/../scripts/scrub-secrets.sh $OUTPUT_DIR/secrets
 
 tar cvf html/export.tar export
 echo 'files can be found in export.tar'
