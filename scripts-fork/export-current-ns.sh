@@ -20,10 +20,9 @@ SCRIPT_DIR=$(dirname "$0")
 
 # Generate yamls
 for o in $RESOURCES; do  
-      echo Forking $o
-      bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o  & 
-done 
-wait
+      echo Processing $o
+      bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o    
+done  
 bash $SCRIPT_DIR/scrub-secrets.sh $OUTPUT_DIR/secrets
 
 tar cvf html/export.tar export
