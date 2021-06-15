@@ -18,11 +18,20 @@ echo Output to $OUTPUT_DIR
 
 SCRIPT_DIR=$(dirname "$0")
 
+# prevent overrunning system
+MAX_FORK=10
+COUNTER=0 
 # Generate yamls
 for o in $RESOURCES; do  
       echo Processing $o
-      bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o    
+      let counter++
+      bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o  &  
+      if [[ "$counter" -eq $MAX_FORK ]]; then
+       counter=0 
+       wait  
+      fi
 done  
+wait  
 bash $SCRIPT_DIR/../scripts/scrub-secrets.sh $OUTPUT_DIR/secrets
 
 tar cvf html/export.tar export
