@@ -29,6 +29,8 @@
   .fa-coffee {
     font-size: 200px
   }
+    
+
 </style>
 
 <body>
@@ -47,29 +49,32 @@
     <button onclick="generateExport()" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
       Export the namespace
     </button>
+    <button onclick="submitPR()" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+      Submit a Pull Request
+    </button> 
+    <a href="export.tar" target="_blank">
+      <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+        Download Export Directory Tar
+      </button>
+    </a> 
+  
     
   <p> App was built at  
     <div id="build-date"> </div>
   </p>
 
   </header> 
+ 
+        <h3>Git Info</h3>
+        <div id="gitinfo" style="height:300;width:800px;border:2px solid #ccc;"></div>
 
-  <h4>Manifest Directory</h4>
-  <div id="tree-view" style="height:300;width:800px;border:2px solid #ccc;"></div>
-  
-  <h1 id="submitpr"> Submit PR</h1>  
-  <button onclick="submitPR()" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
-    Submit a Pull Request
-  </button> 
+        <h3>Manifest Directory Tree</h3>
+        <div id="tree-view" style="height:300;width:800px;border:2px solid #ccc;"></div>
+        <h3>Output</h3>
+        <div id="stdout-view" style="height:300;width:800px;border:2px solid #ccc;"></div>
 
-  <h4>Output</h4>
-  <div id="stdout-view" style="height:300;width:800px;border:2px solid #ccc;"></div>
-  
-  <a href="export.tar" target="_blank">
-    <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
-      Download Export Directory Tar
-    </button>
-  </a> 
+       
+ 
 
   <!-- Footer -->
   <footer class="w3-container w3-padding-64 w3-center w3-opacity">
@@ -122,12 +127,14 @@
               if (r.inprogress) {   
                 updateStatus(JSON.stringify (r, undefined, 4))  
                 updateTreeView(r.tree) 
+                updateGitInfo(r) 
                 setTimeout (loopUpdateStatus, 1000); 
                 console.log ("setTimeout   loopUpdateStatus")
               } else {   
                 console.log(JSON.stringify (r, undefined, 4)) 
                 updateStatus(r.stdout)
                 updateTreeView(r.tree) 
+                updateGitInfo(r) 
               } 
           },
           function (result) { console.log ("error")}
@@ -137,6 +144,15 @@
       function updateStatus(text) {  
         setInnerHtml("stdout-view", '<pre>' + text + '</pre>' );
       }
+
+      function updateGitInfo(r) { 
+        var print = {} 
+        print.username = r.username;
+        print.repo = r.repo;
+        print.email = r.email;  
+        var text = JSON.stringify (print, undefined, 4)
+        setInnerHtml("gitinfo", '<pre>' + text + '</pre>' );
+      } 
 
       function updateTreeView(text) {  
         setInnerHtml("tree-view", '<pre>' + text + '</pre>' );
@@ -149,7 +165,7 @@
         document.getElementById(id).innerHTML = html;
       }  
       getTextAndUpdate('build-date', updateBuild, function () {
-          alert("error happened fetching buid-date")
+          console.log("error happened fetching build-date")
       }); 
       loopUpdateStatus()
   </script>
