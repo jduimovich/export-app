@@ -1,4 +1,4 @@
-REPO=export-gitops
+REPO=MY_GITHUB_REPO
 REPO_URL=https://github.com/$MY_GITHUB_USER/$REPO.git
 REPO_ORIGIN=https://$MY_GITHUB_USER:$MY_GITHUB_TOKEN@github.com/$MY_GITHUB_USER/$REPO.git
 
@@ -10,8 +10,8 @@ cd $REPO
 git remote remove origin
 git remote add origin $REPO_ORIGIN
 
-git config --global user.email "jduimovich@gmail.com"
-git config --global user.name "John Duimovich"
+git config --global user.email MY_GITHUB_EMAIL
+git config --global user.name MY_GITHUB_USERNAME  
 
 export BR="gitops-"$(date "+%d%m%y-%s")
 git checkout -b  $BR 

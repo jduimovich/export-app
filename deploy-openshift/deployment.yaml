@@ -19,6 +19,21 @@ spec:
         - name: export-app-deploy
           image: jduimovich/export-app    
           env:
+            - name: MY_GITHUB_REPO 
+              valueFrom:
+                configMapKeyRef:
+                  name: git-user-and-email            
+                  key: repo
+            - name: MY_GITHUB_USERNAME     
+              valueFrom:
+                configMapKeyRef:
+                  name: git-user-and-email            
+                  key: username
+            - name: MY_GITHUB_EMAIL     
+              valueFrom:
+                configMapKeyRef:
+                  name: git-user-and-email            
+                  key: email
             - name: MY_GITHUB_USER
               valueFrom:
                 secretKeyRef:

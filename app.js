@@ -40,9 +40,12 @@ function run_web_site(port) {
 
 	var status = {  
 		"inprogress": false,
+		"username": process.env.MY_GITHUB_USERNAME,
+		"repo": process.env.MY_GITHUB_REPO,
+		"email": process.env.MY_GITHUB_EMAIL,
 		"time": Date.now(),
 		"tree": "no data",
-		"stdout": "no data"   
+		"stdout": "no data"
 	} 
 
 	function sendStatus (res) { 
