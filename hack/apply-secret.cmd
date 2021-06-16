@@ -2,8 +2,6 @@
 set CURRENT_DIR=%cd%
 set SCRIPT_DIR=%~dp0
 
-set MY_GITHUB_REPO=gitops-1
-
 set DEPLOY_GIT_SECRET=deploy-secret\gitsecret.yaml 
 set DEPLOY_GIT_CONFIG=deploy-secret\gitconfigmap.yaml
 
