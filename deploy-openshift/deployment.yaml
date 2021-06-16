@@ -14,7 +14,7 @@ spec:
       labels:
         app: export-app
     spec: 
-      serviceAccountName: k8s-101-role
+      serviceAccountName: export-app-sa
       containers:
         - name: export-app-deploy
           image: jduimovich/export-app    

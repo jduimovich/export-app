@@ -1,23 +1,23 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: k8s-101-role
+  name: export-app-sa
 subjects:
 - kind: ServiceAccount
-  name: k8s-101-role
+  name: export-app-sa
   namespace: n1
 roleRef:
   kind: Role
-  name: k8s-101-role
+  name: export-app-sa
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: k8s-101-role 
+  name: export-app-sa 
   namespace: n1
   labels:
-    k8s-app: export-app
+    export-app-sa: export-app
 rules: 
 # Minimal privs for script  
 - apiGroups: [""]
@@ -35,8 +35,8 @@ rules:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: k8s-101-role
+  name: export-app-sa
   namespace: n1
   labels:
-    k8s-app: export-app
+    export-app-sa: export-app
 ---
