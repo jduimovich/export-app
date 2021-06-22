@@ -22,7 +22,7 @@ SCRIPT_DIR=$(dirname "$0")
 
 if [ -z $MAX_FORK ]
 then
-MAX_FORK=15     
+MAX_FORK=25     
 echo $0: "Running in parallel set with MAX_FORK=$MAX_FORK"
 fi
 
