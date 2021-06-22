@@ -18,10 +18,36 @@ echo Output to $OUTPUT_DIR
 
 SCRIPT_DIR=$(dirname "$0")
 
+# prevent overrunning system
+
+if [ -z $MAX_FORK ]
+then
+MAX_FORK=15     
+echo $0: "Running in parallel set with MAX_FORK=$MAX_FORK"
+fi
+
+
+echo output > stdout.txt
+rtotal=0
+for o in $RESOURCES; do  
+      let rtotal++
+done
+
+idx=0 
+counter=0 
 # Generate yamls
 for o in $RESOURCES; do  
-      bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o   
-done 
+      echo Processing $o  $idx/$rtotal
+      let counter++
+      let idx++
+      bash $SCRIPT_DIR/export-resources.sh $OUTPUT_DIR $DBG_DIR $IGNORES $o  &  
+      echo Processing $o  $idx/$rtotal >> stdout.txt
+      if [[ "$counter" -eq $MAX_FORK ]]; then
+       counter=0 
+       wait  
+      fi
+done  
+wait  
 bash $SCRIPT_DIR/scrub-secrets.sh $OUTPUT_DIR/secrets
 
 tar cvf html/export.tar export

@@ -20,17 +20,16 @@ function runsh(scriptname, cb) {
 	});
 }
 
-function getDirectoryTree() { 
+function getFileContents(fname, nodata) { 
 	try { 
 		var fs = require('fs');
-		var contents = fs.readFileSync('tree.txt', 'utf8');
+		var contents = fs.readFileSync(fname, 'utf8');
 		return contents;
 	}catch (e) { 
-		return "no tree data"
-	}
-	
+		return nodata
+	} 
 }
-
+ 
 function run_web_site(port) {    
 	app.use(express.static('html'));
 	app.use("/", express.Router());   
@@ -43,7 +42,7 @@ function run_web_site(port) {
 		"username": process.env.MY_GITHUB_USERNAME,
 		"repo": process.env.MY_GITHUB_REPO,
 		"email": process.env.MY_GITHUB_EMAIL,
-		"time": Date.now(),
+		"time": new Date().toISOString(),
 		"tree": "no data",
 		"stdout": "no data"
 	} 
@@ -60,15 +59,18 @@ function run_web_site(port) {
 				return;
 			}   
 			status.inprogress=true
-			status.time = Date.now()
+			status.time = new Date().toISOString()
+			status.start = Date.now()
+			status.elapsed = 0
 			status.stdout="Pending ..." 
 			status.tree = "Generating ..."  
 			sendStatus (res)
 			runsh(scriptName, function (stdout) {  
 				status.inprogress=false;
-				status.time = Date.now()
+				status.time = new Date().toISOString()
+				status.elapsed = Date.now() - status.start
 				status.stdout=stdout;
-				status.tree = getDirectoryTree() 
+				status.tree = getFileContents('tree.txt', "no tree data") 
 			}); 
 		}
 		return f;
@@ -78,9 +80,13 @@ function run_web_site(port) {
 	app.get("/submitpr", generateScriptHandler ( "scripts/checkout-submit-pr.sh") );  
 
 	app.get("/status", function (req, res) { 
-		console.log ("getting /status")  
-		status.time = Date.now()  
-		status.tree = getDirectoryTree() 
+		console.log ("getting /status")   
+		status.time = new Date().toISOString()
+		status.elapsed = Date.now() - status.start 
+		status.tree = getFileContents('tree.txt', "no tree data")
+		if (status.inprogress) {  
+			status.stdout = getFileContents('stdout.txt', "no output") 
+		}  
 		res.send(JSON.stringify(status));  
 	});    
 

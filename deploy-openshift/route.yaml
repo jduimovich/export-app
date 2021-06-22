@@ -1,9 +1,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: export-app
-  labels:
-    app: export-app-service  
+  name: export-app 
+  labels:  
+    app: export-app-service
+  annotations:
+    export.app.control/prune: "true"   
 spec: 
   port:
     targetPort: 8080

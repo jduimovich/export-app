@@ -1,7 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: export-app-sa
+  name: export-app-sa  
+  annotations:
+    export.app.control/prune: "true"   
 subjects:
 - kind: ServiceAccount
   name: export-app-sa
@@ -19,18 +21,87 @@ metadata:
   labels:
     export-app-sa: export-app
 rules: 
-# Minimal privs for script  
-- apiGroups: [""]
+- apiGroups:
+  - '*'
   resources:
-  - pods
+  - '*'
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - batch
+  resources:
+  - jobs
   verbs:
   - create
-  - update
-  - patch
   - delete
   - get
-  - watch
   - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups: 
+  - ""
+  resources:
+  - extracts
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - extracts/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - extracts/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - roles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 ---
 apiVersion: v1
 kind: ServiceAccount

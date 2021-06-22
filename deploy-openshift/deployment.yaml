@@ -3,7 +3,9 @@ kind: Deployment
 metadata:
   name: export-app-deploy
   labels:
-    app: export-app 
+    app: export-app     
+  annotations:
+    export.app.control/prune: "true"
 spec:
   replicas: 1
   selector:
@@ -14,7 +16,7 @@ spec:
       labels:
         app: export-app
     spec: 
-      serviceAccountName: export-app-sa
+      serviceAccountName: export-app-sa  
       containers:
         - name: export-app-deploy
           image: jduimovich/export-app    

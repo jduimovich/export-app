@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: git-user-and-email
+  name: git-user-and-email 
+  annotations:
+    export.app.control/prune: "true"   
 data: 
   username: "John Duimovich"
   email: "jduimovich@gmail.com"

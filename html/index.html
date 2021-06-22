@@ -125,13 +125,14 @@
               console.log(JSON.stringify (r, undefined, 4)) 
               console.log ("---------------------")
               if (r.inprogress) {   
-                updateStatus(JSON.stringify (r, undefined, 4))  
+                //updateStatus(JSON.stringify (r, undefined, 4))  
+                updateStatus(Math.trunc(r.elapsed/1000) + " seconds\n" + r.stdout)
                 updateTreeView(r.tree) 
                 updateGitInfo(r) 
                 setTimeout (loopUpdateStatus, 1000); 
                 console.log ("setTimeout   loopUpdateStatus")
-              } else {   
-                console.log(JSON.stringify (r, undefined, 4)) 
+              } else {    
+                updateStatus("Completed in " +  Math.trunc(r.elapsed/1000) + " seconds\n" + r.stdout)
                 updateStatus(r.stdout)
                 updateTreeView(r.tree) 
                 updateGitInfo(r) 
