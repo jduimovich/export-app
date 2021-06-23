@@ -151,6 +151,7 @@
         print.username = r.username;
         print.repo = r.repo;
         print.email = r.email;  
+        print.namespace = r.ns;  
         var text = JSON.stringify (print, undefined, 4)
         setInnerHtml("gitinfo", '<pre>' + text + '</pre>' );
       } 
