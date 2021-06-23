@@ -42,6 +42,7 @@ function run_web_site(port) {
 		"username": process.env.MY_GITHUB_USERNAME,
 		"repo": process.env.MY_GITHUB_REPO,
 		"email": process.env.MY_GITHUB_EMAIL,
+		"ns": process.env.MY_EXPORT_NS, 
 		"time": new Date().toISOString(),
 		"tree": "no data",
 		"stdout": "no data"
