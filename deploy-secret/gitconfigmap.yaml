@@ -8,3 +8,4 @@ data:
   username: "John Duimovich"
   email: "jduimovich@gmail.com"
   repo: "export-gitops"
+  ns: "n1"
